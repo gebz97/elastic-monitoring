@@ -1,0 +1,1 @@
+{"@timestamp":"%{GREEDYDATA:timestamp}","@version":"%{GREEDYDATA:version}","message":"%{GREEDYDATA:message}","sysloghost":"%{GREEDYDATA:sysloghost}","severity":"%{GREEDYDATA:severity}","facility":"%{GREEDYDATA:facility}","programname":"%{GREEDYDATA:programname}","procid":"%{GREEDYDATA:procid}"}

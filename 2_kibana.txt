@@ -1,0 +1,56 @@
+_____________________________________________
+vi /etc/profile.d/kibana.sh
+
+export http_proxy="proxyserver"
+export https_proxy="proxyserver"
+_____________________________________________
+#key
+rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+#repo
+
+[kibana-8.x]
+name=Kibana repository for 8.x packages
+baseurl=https://artifacts.elastic.co/packages/8.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+
+#dnf
+dnf install kibana -y
+
+_____________________________________________
+#curl
+
+mkdir kibana-install-dir
+cd kibana-install-dir
+curl https://artifacts.elastic.co/downloads/kibana/kibana-8.12.0-x86_64.rpm > kibana-8.12.0-x86_64.rpm
+
+#dnf
+dnf install ./kibana-8.12.0-x86_64.rpm -y
+
+vi /etc/kibana/kibana.yml
+
+#ip
+server.host: "0.0.0.0"
+
+systemctl enable --now kibana.service
+
+bin/kibana-verification-code
+_____________________________________________
+#On elastic node:
+
+/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+
+_____________________________________________
+
+Kibana is currently running with legacy OpenSSL providers enabled! For details and instructions on how to disable see https://www.elastic.co/guide/en/kibana/8.12/production.html#openssl-legacy-provider
+Created Kibana keystore in /etc/kibana/kibana.keystore
+_____________________________________________
+eyJ2ZXIiOiI4LjEyLjEiLCJhZHIiOlsiMTkyLjE2OC4xLjEwMTo5MjAwIl0sImZnciI6IjAzNWJmM2E1ODhmMzJmZWQyZjdkZTljYjcxMmIzMDc3N2VlMzMzNzc5MWZhOWYxZjk5ZmVhODVlZjVjYzk0OWYiLCJrZXkiOiIzdGlGaG8wQjRwVWhsLUU5aUpzbDpRVFdLQzVZUFF3NnhMVlh4UG9aVDJRIn0=
+_____________________________________________
+
+Log in with the elastic user

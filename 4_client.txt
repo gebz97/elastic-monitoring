@@ -1,0 +1,32 @@
+#vi /etc/rsyslog.d/20-remote.conf
+
+cat << EOF > /etc/rsyslog.d/20-remote.conf
+\$template RFC5424Format,"<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% %MSGID% %STRUCTURED-DATA% %msg%\n"
+*.* @192.168.1.100:514;RFC5424Format
+EOF
+
+
+vi /etc/rsyslog.d/20-remote.conf
+
+template(name="json-template"
+  type="list") {
+    constant(value="{")
+      constant(value="\"@timestamp\":\"")     property(name="timereported" dateFormat="rfc3339")
+      constant(value="\",\"@version\":\"1")
+      constant(value="\",\"message\":\"")     property(name="msg" format="json")
+      constant(value="\",\"sysloghost\":\"")  property(name="hostname")
+      constant(value="\",\"severity\":\"")    property(name="syslogseverity-text")
+      constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
+      constant(value="\",\"programname\":\"") property(name="programname")
+      constant(value="\",\"procid\":\"")      property(name="procid")
+    constant(value="\"}\n")
+}
+
+# This line sends all lines to defined IP address at port 10514,
+# using the "json-template" format template
+
+*.notice		@192.168.1.100:5144;json-template
+
+systemctl daemon-reload
+systemctl restart rsyslog
+systemctl status rsyslog

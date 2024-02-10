@@ -1,0 +1,1 @@
+{"@timestamp":"%{TIMESTAMP_ISO8601:timestamp}","@version":"%{DATA:version}","message":"%{GREEDYDATA:message}","sysloghost":"%{HOSTNAME:sysloghost}","severity":"%{LOGLEVEL:severity}","facility":"%{WORD:facility}","programname":"%{WORD:programname}","procid":"%{NUMBER:procid}"}"

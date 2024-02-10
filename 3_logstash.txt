@@ -1,0 +1,56 @@
+_____________________________________________
+#key
+sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+vi /etc/yum.repos.d/logstash.repo
+
+[logstash-8.x]
+name=Elastic repository for 8.x packages
+baseurl=https://artifacts.elastic.co/packages/8.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+sudo dnf install -y logstash
+
+systemctl enable --now logstash.service
+
+_____________________________________________
+#Syslog:
+
+vi /etc/rsyslog.d/10-central-server.conf
+
+$ModLoad imudp
+$UDPServerRun 514
+
+systemctl daemon-reload
+systemctl restart rsyslog
+
+vi /etc/logstash/conf.d/syslog.conf
+
+#logstash conf
+
+input {
+  udp {
+    host => "192.168.1.100"
+    port => 5144
+#    type => syslog
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["https://192.168.1.101:9200"]
+    user => "logstash"
+    password => "logstash"
+    pipeline => "logstash-syslog"
+    ssl => true
+    ssl_certificate_verification => false
+    index => "search-logstash-syslog"
+  }
+}
+
+systemctl daemon-reload
+systemctl restart logstash

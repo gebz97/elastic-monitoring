@@ -1,0 +1,1 @@
+<iframe src="http://192.168.1.102:5601/app/dashboards#/view/0538efd2-8a0d-4c55-a343-a9e5e970bdb2?embed=true&_g=(refreshInterval:(pause:!t,value:60000),time:(from:now%2Fd,to:now%2Fd))&_a=()&show-top-menu=true&show-query-input=true&show-time-filter=true" height="600" width="800"></iframe>
